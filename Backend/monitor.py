@@ -1,5 +1,5 @@
 import os
-from time import sleep
+import time
 from parser import Parser
 from posts_manager import PostsManager
 
@@ -25,6 +25,7 @@ class Monitor(object):
 		Monitor.files.append(filename)
 		path = os.sep.join([Monitor.path, filename])
 		parsed = Parser.parse(path)
+		parsed['date'] = int(time.time() * 1000)
 		PostsManager.new_post(parsed)
 		PostsManager.save_to_file()
 

@@ -22,46 +22,49 @@ app.config(function($routeProvider) {
 	});
 });
 
-app.controller('PostController', ["$scope", "$routeParams", function($scope, $routeParams){
+app.controller('PostController', ["$scope", "$routeParams", "$http", function($scope, $routeParams, $http){
 	$scope.post_id = $routeParams.post_id;
-	$scope.posts = [
-		{
-			id: 0,
-			title: 'Hello World!',
-			author: 'Oz Tamir',
-			date: 1340056238044,
-			subtitle: "Discover my secret plan",
-			body: "Hello World, this is my first blog post in which I will talk about oh never mind this is just a project to learn Angular"
-		},
-		{
-			id: 1,
-			title: 'Hello Space!',
-			author: 'Oz Tamir',
-			date: 1440086248044,
-			subtitle: "Going to the next level",
-			body: "SPACEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+	$http.get('http://localhost:5000/post/' + $routeParams.post_id).then(function(resp) {
+		console.log('Success', resp);
+		$scope.post = resp.data
+	}, function(err) {
+		console.error('ERR', err);
+		$scope.post = {
+			title: 'Oops...',
+			subtitle: 'Something went wrong, please try again.',
+			error: true
 		}
-	];		
+	});
+
 }]);
 
-app.controller('IndexController', function($scope){
-	$scope.posts = [
-		{
-			id: 0,
-			title: 'Hello World!',
-			author: 'Oz Tamir',
-			date: 1340056238044,
-			subtitle: "Discover my secret plan",
-			body: "Hello World, this is my first blog post in which I will talk about oh never mind this is just a project to learn Angular"
-		},
-		{
-			id: 1,
-			title: 'Hello Space!',
-			author: 'Oz Tamir',
-			date: 1440086248044,
-			subtitle: "Going to the next level",
-			body: "SPACEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
-		}
-	];	
-})
+app.controller('IndexController', ["$scope", "$http", function($scope, $http){
+	$http.get('http://localhost:5000/posts').then(function(resp) {
+		console.log('Success', resp);
+		$scope.posts = resp.data;
+
+	}, function(err) {
+		console.error('ERR', err);
+		$scope.posts = [{
+			title: 'Oops...',
+			subtitle: 'Something went wrong, please try again.',
+			error: true
+		}];
+	});
+
+}])
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+

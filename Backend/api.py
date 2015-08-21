@@ -1,10 +1,15 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
+from flask.ext.cors import CORS
+
+import threading
+from time import sleep
 
 from monitor import Monitor
 from posts_manager import PostsManager
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 class Posts_Meta(Resource):
@@ -25,7 +30,30 @@ class Post_Data(Resource):
 api.add_resource(Post_Data, '/post/<string:post_id>')
 api.add_resource(Posts_Meta, '/posts')
 
-if __name__ == '__main__':
+def monitor_updates():
     PostsManager.init()
-    Monitor.update()
+    while True:
+        Monitor.update()
+        sleep(5)
+
+def run_api():
     app.run()
+
+if __name__ == '__main__':
+    monitor = threading.Thread(target=monitor_updates)
+    monitor.start()
+
+    api = threading.Thread(target=run_api)
+    api.start()
+
+
+
+
+
+
+
+
+
+
+
+

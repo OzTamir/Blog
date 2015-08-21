@@ -27,12 +27,16 @@
                         {{post.subtitle}}
                     </h3>
                 </a>
-                <p class="post-meta">Posted by <a href="#">{{post.author}}</a> on {{post.date | date}}</p>
+                <p ng-hide="post.error" class="post-meta">Posted by <a href="#">{{post.author}}</a> on {{post.date | date}}</p>
             <hr>
             </div>
+        <div class="col-lg-10 col-lg-10"
             <!-- Pager -->
             <ul class="pager">
-                <li class="next">
+                <li class="prev" ng-hide="currentPostStart === 0">
+                    <a href="#">&larr; Newer Posts</a>
+                </li>
+                <li class="next" ng-hide="currentPostStart + postsPerPage > allPosts.length" ng-click="olderPosts()">
                     <a href="#">Older Posts &rarr;</a>
                 </li>
             </ul>
